@@ -1,13 +1,13 @@
 import { Given, When, Then } from '@cucumber/cucumber';
-import { expect } from '@playwright/test';
+import { APIResponse, expect } from '@playwright/test';
 import { faker } from '@faker-js/faker';
-import { sendApiRequest } from '../src/support/utils/utils';
+import { sendApiRequest } from '../support/utils/utils';
 import dotenv from 'dotenv'
 
 dotenv.config();
 const apiKey = process.env.API_KEY || 'default_api_key';
 const apiUrl = process.env.API_BASE_URL;
-let response: any;
+let response: APIResponse;
 
 // Given step: Prepare registration details with missing username
 Given('I have the player registration details with missing username', function () {

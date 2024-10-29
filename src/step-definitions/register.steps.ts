@@ -2,19 +2,21 @@ import { Given, When, Then } from '@cucumber/cucumber';
 import { APIResponse, expect } from '@playwright/test';
 import { faker } from '@faker-js/faker';
 import dotenv from 'dotenv'
-import { sendApiRequest, saveUsernameToFile } from '../src/support/utils/utils';
+import { sendApiRequest, saveUsernameToFile } from '../support/utils/utils';
 
 
 
 dotenv.config();
 
-//const apiKey = process.env.API_KEY;
-const apiUrl = 'https://api-bo2.btobet.com/Services/GamingPortalService.svc/';
+
+const apiKey = process.env.API_KEY || 'default_api_key';
+const apiUrl = process.env.API_BASE_URL;
+
 let response: APIResponse;
 let generatedUsername: string;
 
 const tempFilePath = './username.txt'; // Path to save the generated username
-const apiKey = process.env.API_KEY || 'default_api_key';
+
 Given('I have the player registration details', function () {
   generatedUsername = faker.internet.userName();
   console.log(`Generated Username: ${generatedUsername}`);
