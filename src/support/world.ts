@@ -1,40 +1,15 @@
-import { setWorldConstructor, World, IWorldOptions } from '@cucumber/cucumber';
-import { APIRequestContext, request } from '@playwright/test';
-import { UserService } from '../services/UserService';
+//import { IWorldOptions, setWorldConstructor, World } from '@cucumber/cucumber';
+import { APIRequestContext } from '@playwright/test';
+import { ServiceManager } from '../services/serviceManager';
+import { World } from '@cucumber/cucumber';
 
 export interface ICustomWorld extends World {
+  serviceObj?: ServiceManager;
+  username: string;
+  email: string;
+  phonenumber: string;
+  lastname: string;
+  firstname: string;
+  InternalID:string;
   context?: APIRequestContext;
-  userService?: UserService;
-  testData: Map<string, any>;
-  init(): Promise<void>;  // Add this
-  setTestData(key: string, value: any): void;  // Add this
-  getTestData(key: string): any;  // Add this
 }
-
-export class CustomWorld extends World implements ICustomWorld {
-  context?: APIRequestContext;
-  userService?: UserService;
-  testData: Map<string, any> = new Map();
-
-  constructor(options: IWorldOptions) {
-    super(options);
-  }
-
-  async init(): Promise<void> {
-    this.context = await request.newContext({
-      // Add any global settings here, like baseURL
-      baseURL: 'https://api.example.com',
-    });
-    this.userService = new UserService(this.context);
-  }
-
-  setTestData(key: string, value: any): void {
-    this.testData.set(key, value);
-  }
-
-  getTestData(key: string): any {
-    return this.testData.get(key);
-  }
-}
-
-setWorldConstructor(CustomWorld);

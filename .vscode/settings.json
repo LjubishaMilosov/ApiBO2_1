@@ -1,0 +1,43 @@
+{
+    "window.zoomLevel": 0,
+    "editor.tabSize": 2,
+    "files.exclude": {
+        "**/.git": true,
+        "**/build": true,
+        "**/CVS": true
+    },
+    "editor.tabCompletion": "on",
+    "editor.formatOnSave": true,
+    "editor.minimap.enabled": true,
+    "editor.minimap.showSlider": "always",
+    "editor.minimap.renderCharacters": true,
+    "editor.mouseWheelZoom": true,
+    "editor.quickSuggestions": {
+        "other": true,
+        "comments": true,
+        "strings": true
+    },
+    "search.exclude": {
+        "**/node_modules": true
+    },
+    "javascript.referencesCodeLens.enabled": true,
+    "typescript.referencesCodeLens.enabled": true,
+    "typescript.implementationsCodeLens.enabled": true,
+    "git.autofetch": true,
+    "eslint.options": {
+        "extensions": [".js", ".ts"]
+    },
+    "eslint.validate": ["javascript","typescript"],
+    "prettier.singleQuote": true,
+    "prettier.trailingComma": "all",
+  
+    "cucumberautocomplete.syncfeatures": "./features/**/*.feature",
+    "editor.defaultFormatter": "alexkrechik.cucumberautocomplete",
+    "cucumberautocomplete.steps": [
+        "src/step-definitions/**/*.ts"
+    ],
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit"
+    }
+  }

@@ -1,69 +1,49 @@
-import { Given, When, Then } from '@cucumber/cucumber';
-import { expect, request, APIResponse } from '@playwright/test';
+import { ICustomWorld } from './../support/world';
+import { Given, Then } from '@cucumber/cucumber';
+import { APIResponse, expect } from '@playwright/test';
 import dotenv from 'dotenv'
-import * as fs from 'fs';
+import { sendApiRequest } from '../support/utils/utilityFunctions';
+
 
 dotenv.config();
-
-const apiKey = process.env.API_KEY;
-const apiUrl = process.env.API_BASE_URL || '';
+const apiKey = process.env.API_KEY || 'default_api_key';
+const apiUrl = process.env.API_BASE_URL;
 let response: APIResponse;
-let generatedUsername: string;
 
-const tempFilePath = './username.txt';  // Path to retrieve the stored username
-
-// Step to get login details with data table for password
-Given('I have the login details', function (dataTable) {
-  if (fs.existsSync(tempFilePath)) {
-    generatedUsername = fs.readFileSync(tempFilePath, 'utf8');  // Load username from file
-    console.log(`Loaded Username for Login: ${generatedUsername}`);
-  } else {
-    throw new Error('No username found to log in');
-  }
-
-  // Extract password from the data table
-  const data = dataTable.rowsHash();
-  this.password = data.password;
-  console.log(`Password for Login: ${this.password}`);
-});
-
-// Step to send POST request for login
-When('I send a POST request to log in the player', async function () {
-  const apiContext = await request.newContext();
+Given('I send a POST request to log in the newly registered player', async function (this: ICustomWorld) {
   const requestBody = {
     apiKey: apiKey,
-    login: generatedUsername,  // Use username from file
-    password: this.password,    // Use password from the data table
-    ipAddress: "62.162.212.254",
-    brandID: null,
-    deviceType: "Default",
+    login: this.username,
+    password: "B2Btests@",
+    ipAddress: "172.10.230.21",
     returnBalance: true,
-    returnApplicableBonuses: false,
     returnCustomerDetails: true,
-    netEntLogin: false,
-    browser: "Chrome",
-    returnSegments: false,
-    lng: "EN"
+    brandID: 1,
+    browser: "Google Chrome",
+    deviceType: null,
+    deviceModel: "Unknown",
+    deviceOS: "Windows",
+    screenSize: "1536 x 864",
+    cloudfrontCountry: null
   };
 
-  response = await apiContext.post(`${apiUrl}/CustomerLoginAccountV2`, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: requestBody,
-  });
+  console.log('Login Request Body:', JSON.stringify(requestBody, null, 2));
+
+  response = await sendApiRequest(`${apiUrl}CustomerLoginAccountV2`, requestBody);
 
   const responseBody = await response.json();
   console.log('Login Response:', responseBody);  // Log the full response for debugging
 });
 
-// Step to check if the login is successful
 Then('I should receive a 200 response for login', async function () {
   expect(response.status()).toBe(200);
 });
 
 // Step to verify login success in response
-Then('the login should be successful', async function () {
+Then('Login with newly registered user should be successful', async function (this: ICustomWorld) {
   const responseBody = await response.json();
-  expect(responseBody.IsSuccessful).toBe(true);  // Checking if IsSuccessful is true
+  expect(responseBody.IsSuccessful).toBe(true); 
+expect(this.InternalID).toEqual(responseBody.Customer.Account.InternalID);
+console.log(this.InternalID);
 });
+

@@ -1,22 +1,22 @@
 import { Before, After, BeforeAll, AfterAll } from '@cucumber/cucumber';
 import { ICustomWorld } from './world';
+import { ServiceManager } from '../services/serviceManager';
+import { request } from 'playwright/test';
 
 BeforeAll(async function () {
-  // Run once before all tests
   console.log('Starting test run');
 });
 
 Before(async function (this: ICustomWorld) {
-  // Run before each scenario
-  await this.init();
+  this.context = await request.newContext({});
+
+  this.serviceObj = new ServiceManager(this.context);
 });
 
 After(async function (this: ICustomWorld) {
-  // Run after each scenario
   await this.context?.dispose();
 });
 
 AfterAll(async function () {
-  // Run once after all tests
   console.log('Test run completed');
 });
